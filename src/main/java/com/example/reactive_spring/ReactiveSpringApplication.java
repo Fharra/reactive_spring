@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.reactivestreams.Publisher;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -13,6 +14,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
 @SpringBootApplication
@@ -20,6 +23,17 @@ public class ReactiveSpringApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ReactiveSpringApplication.class, args);
+    }
+}
+
+@RestController
+@RequiredArgsConstructor
+class ReservationRestController {
+    private final ReservationRepository reservationRepository;
+
+    @GetMapping("/reservations")
+    Publisher<Reservation> reservationPublisher() {
+        return this.reservationRepository.findAll();
     }
 }
 
